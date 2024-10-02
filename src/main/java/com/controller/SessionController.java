@@ -115,7 +115,10 @@ public class SessionController {
 		UserEntity user = search.get();
 		String otp = otpService.generateOtp(6);
 		
+		mailService.sendMessage(user.getEmail(), otp);
+		user.setOtp(otp);		
+		repository.save(user);
 		
-		return "";
+		return "NewPassword";
 	}
 }

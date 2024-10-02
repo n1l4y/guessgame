@@ -35,6 +35,8 @@ public class UserEntity {
 	    )
 	private String password;
 	
+	private String otp;
+	
 	public Integer getUserId() {
 		return userId;
 	}
@@ -70,6 +72,12 @@ public class UserEntity {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getOtp() {
+		return otp;
+	}
+	public void setOtp(String otp) {
+		this.otp = otp;
 	}
 	
 	
