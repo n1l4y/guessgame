@@ -8,5 +8,6 @@
 </head>
 <body>
 	<h1>Welcome ${user.getName()}</h1>
+	<h2><a href='startgame'>Start Game</a></h2>
 </body>
 </html>

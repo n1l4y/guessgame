@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Guess the Number</title>
+<title>Guess the Number between 1-5</title>
 </head>
 <body>
 	<form method="post" action="checkguess">
-		<input type="number" name="guessNumber" />
+		<input type="number" name="guess" />
 		<input type="submit" value="Go" />
 	</form>
 </body>

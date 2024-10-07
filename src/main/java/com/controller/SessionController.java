@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.dto.EmailDto;
 import com.dto.LoginDto;
 import com.dto.ResetPassDto;
+import com.entity.TransactionEntity;
 import com.entity.UserEntity;
+import com.repository.TransactionRepository;
 import com.repository.UserRepository;
 import com.service.MailService;
 import com.service.OtpService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class SessionController {
@@ -32,6 +35,9 @@ public class SessionController {
 	
 	@Autowired
 	UserRepository repository;
+	
+	@Autowired
+	TransactionRepository txRepository;
 	
 	@Autowired
 	MailService mailService;
@@ -70,7 +76,7 @@ public class SessionController {
 	}
 	
 	@PostMapping("/signin")
-	public String signin(@Validated LoginDto login, BindingResult result,Model model) {
+	public String signin(@Validated LoginDto login, BindingResult result,Model model, HttpSession session) {
 		if(result.hasErrors()) {
 			model.addAttribute("validationError", result);
 			return "Signin";
@@ -90,7 +96,8 @@ public class SessionController {
 			return "Signin";
 		}
 		
-		model.addAttribute("user", user);
+//		model.addAttribute("user", user);
+		session.setAttribute("user", user);
 		
 		if(user.getRole().equalsIgnoreCase("USER")) {
 			return "Home";
@@ -161,5 +168,36 @@ public class SessionController {
 		user.setPassword(encoder.encode(updatedPassword.getPassword1()));
 		model.addAttribute("message", "Password has been updated!");
 		return "Signin";
+	}
+	
+	@GetMapping("startgame")
+	public String startGame() {
+		return "StartGame";
+	}
+	
+	@PostMapping("checkguess")
+	public String checkGuess(HttpSession session, TransactionEntity tx) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		tx.setUser(user);
+		Integer generatedNumber = 1 + (int)(Math.random() * 5);
+		tx.setGeneratedNumber(generatedNumber);
+		if(tx.getGuess() == generatedNumber) {
+			tx.setResult("WIN");
+			tx.setTxCredits(100);
+			user.setCredits(user.getCredits() + 100);
+		} else {
+			tx.setResult("LOSE");
+			tx.setTxCredits(-10);
+			user.setCredits(user.getCredits() - 10);
+		}
+		repository.save(user);
+		txRepository.save(tx);
+		session.setAttribute("user", user);
+		return "redirect:/home";
+	}
+	
+	@GetMapping("home")
+	public String home() {
+		return "Home";
 	}
 }
