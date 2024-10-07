@@ -10,7 +10,7 @@ public class OtpService {
 		StringBuffer buffer = new StringBuffer();
 		int index;
 		for(int i = 0; i < n; i++) {
-			index = (int)Math.random() * n;
+			index = (int)(Math.random() * s.length());
 			buffer.append(s.charAt(index));
 		}
 		

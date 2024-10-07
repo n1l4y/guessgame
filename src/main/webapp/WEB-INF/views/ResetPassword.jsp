@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>Enter email address to reset password</h1>
-	<form action="/reset" method="post">
+	<form action="reset" method="post">
 		<label>Enter Email:</label> <br />
 		<input type="email" name="email" /> <p style="color: red;">${error}</p> <br />
 		<input type="submit" value="Reset" />

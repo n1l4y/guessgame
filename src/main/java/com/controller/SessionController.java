@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dto.EmailDto;
 import com.dto.LoginDto;
+import com.dto.ResetPassDto;
 import com.entity.UserEntity;
 import com.repository.UserRepository;
 import com.service.MailService;
 import com.service.OtpService;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class SessionController {
@@ -102,7 +106,7 @@ public class SessionController {
 	}
 	
 	@PostMapping("reset")
-	public String resetPassword(@Validated EmailDto email, BindingResult result, Model model) {
+	public String resetPassword(@Validated EmailDto email, BindingResult result, Model model, HttpServletResponse response) {
 		if(result.hasErrors()) {
 			model.addAttribute("error", result.getFieldError("email").getDefaultMessage());
 			return "ResetPassword";
@@ -118,7 +122,44 @@ public class SessionController {
 		mailService.sendMessage(user.getEmail(), otp);
 		user.setOtp(otp);		
 		repository.save(user);
-		
+		Cookie cookie = new Cookie("email", user.getEmail());
+		response.addCookie(cookie);
+//		model.addAttribute("email", user.getEmail());
+		return "redirect:/newpassword";
+	}
+	@GetMapping("newpassword")
+	public String newPassword() {
 		return "NewPassword";
+	}
+	
+	@PostMapping("updatepassword")
+	public String updatePassword(@Validated ResetPassDto updatedPassword, BindingResult result, Model model) {
+		
+		System.out.println("email from jsp..." + updatedPassword.getEmail());
+		if(result.hasErrors()) {
+			model.addAttribute("error", result.getFieldError("password1").getDefaultMessage());
+			return "NewPassword";
+		}
+		
+		
+		if(!updatedPassword.getPassword1().equals(updatedPassword.getPassword2())) {
+			model.addAttribute("passError", "Password do not match!");
+			return "NewPassword";
+		}
+		
+		System.out.println("Optional..." + updatedPassword.getEmail());
+		Optional<UserEntity> search = repository.findByEmail(updatedPassword.getEmail());
+		
+		UserEntity user = search.get();
+		System.out.println("Email..." + user.getEmail());
+		
+		if(!user.getOtp().equals(updatedPassword.getOtp())) {
+			model.addAttribute("otpError", "Invalid OTP");
+			return "NewPassword";
+		}
+		
+		user.setPassword(encoder.encode(updatedPassword.getPassword1()));
+		model.addAttribute("message", "Password has been updated!");
+		return "Signin";
 	}
 }
