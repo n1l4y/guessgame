@@ -71,7 +71,10 @@ public class SessionController {
 	}
 	
 	@GetMapping("/signin")
-	public String signin() {
+	public String signin(HttpSession session) {
+		if(session.getAttribute("user") != null) {
+			return "redirect:/home";
+		}
 		return "Signin";
 	}
 	
@@ -193,11 +196,18 @@ public class SessionController {
 		repository.save(user);
 		txRepository.save(tx);
 		session.setAttribute("user", user);
+		session.setAttribute("tx", tx);
 		return "redirect:/home";
 	}
 	
 	@GetMapping("home")
 	public String home() {
 		return "Home";
+	}
+	
+	@GetMapping("signout")
+	public String signOut(HttpSession session) {
+		session.invalidate();
+		return "redirect:/signin";
 	}
 }
