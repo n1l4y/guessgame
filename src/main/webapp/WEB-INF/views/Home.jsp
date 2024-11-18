@@ -17,11 +17,13 @@
 			
 			
 			<c:otherwise>
-				<p style="color: red;"> You Lost! You guessed: ${tx.getGuess() } and the number was ${tx.getGeneratedNumber()}You now have ${user.getCredits()}</p>
+				<p style="color: red;"> You Lost! You guessed: ${tx.getGuess() } and the number was ${tx.getGeneratedNumber()} You now have ${user.getCredits()}</p>
 			</c:otherwise>
 		</c:choose>
 	</c:if>
 	<h2><a href='startgame'>Start Game</a></h2>
 	<h2><a href="signout">Sign Out</a></h2>
+	<h2><a href="leaderboard">View Leaderboard</a></h2>
+	<h2><a href="addcredits">Buy credits</a></h2>
 </body>
 </html>

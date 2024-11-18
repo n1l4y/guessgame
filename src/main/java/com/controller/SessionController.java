@@ -1,6 +1,7 @@
 package com.controller;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,7 @@ public class SessionController {
 		
 //		model.addAttribute("user", user);
 		session.setAttribute("user", user);
+		session.setAttribute("role", user.getRole());
 		
 		if(user.getRole().equalsIgnoreCase("USER")) {
 			return "Home";
@@ -209,5 +211,25 @@ public class SessionController {
 	public String signOut(HttpSession session) {
 		session.invalidate();
 		return "redirect:/signin";
+	}
+	
+	@GetMapping("leaderboard")
+	public String leaderboard(Model model) {
+		List<Object[]> leaderboard = txRepository.leaderboard();
+		model.addAttribute("leaderboard", leaderboard);
+		return "Leaderboard";
+	}
+	
+	@GetMapping("admin-viewusers")
+	public String viewUsers(Model model) {
+		List<UserEntity> users = repository.findAll();
+		model.addAttribute("users", users);
+		return "AdminViewUsers";
+	}
+	@GetMapping("admin-viewtx")
+	public String viewTx(Model model) {
+		List<TransactionEntity> tx = txRepository.findAll();
+		model.addAttribute("tx", tx);
+		return "AdminViewTx";
 	}
 }

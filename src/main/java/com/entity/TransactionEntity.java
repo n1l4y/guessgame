@@ -73,6 +73,12 @@ public class TransactionEntity {
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
+
+	@Override
+	public String toString() {
+		return "TransactionEntity [txId=" + txId + ", guess=" + guess + ", generatedNumber=" + generatedNumber
+				+ ", result=" + result + ", txCredits=" + txCredits + ", user=" + user.getName() + "]";
+	}
 	
 	
 }
