@@ -10,18 +10,52 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class AuthFilter implements Filter {
 	
 	public AuthFilter() {
-		publicUrl.add("");
+		publicUrl = new ArrayList<>();
+		publicUrl.add("/signin");
+		publicUrl.add("/signup");
+		publicUrl.add("/forgot");
 	}
 	
-	ArrayList<String> publicUrl = new ArrayList<>();
+	ArrayList<String> publicUrl;
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		chain.doFilter(request, response);
+		
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		HttpSession session = httpRequest.getSession(false);
+		boolean status = true;
+		System.out.println(httpRequest.getRequestURI());
+		if(!publicUrl.contains(httpRequest.getRequestURI().toLowerCase())) {
+			if(session != null && session.getAttribute("user") != null) {
+				String role = (String) session.getAttribute("role");
+				
+				if (role.equals("USER") || role.equals("ADMIN")) {
+					status = true;
+				} else {
+					status = false;
+				}
+			} else {
+				status = false;
+			}
+		} 
+		else {
+			System.out.println("public url");
+		}
+		if(status) {
+			chain.doFilter(httpRequest, httpResponse);
+		}
+		else {
+			request.getRequestDispatcher("signin").forward(httpRequest, httpResponse);
+		}
+		
 	}
 }

@@ -223,7 +223,9 @@ public class SessionController {
 	@GetMapping("admin-viewusers")
 	public String viewUsers(Model model) {
 		List<UserEntity> users = repository.findAll();
+		List<Object[]> winRates = txRepository.getWinRate();
 		model.addAttribute("users", users);
+		model.addAttribute("winRates", winRates);
 		return "AdminViewUsers";
 	}
 	@GetMapping("admin-viewtx")
