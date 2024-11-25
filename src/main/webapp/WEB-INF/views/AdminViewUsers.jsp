@@ -71,6 +71,7 @@ new Chart(ctx, {
 		}]
 	},
 	options: {
+		indexAxis: 'y',
 		responsive: true,
 		plugins: {
 			title: {
