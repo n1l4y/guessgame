@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>Signup</h1>
-	<form method="post" action="signup">
+	<form method="post" action="signup" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td>
@@ -35,6 +35,15 @@
 				<td>
 					<input type="password" name="password" />
 					<p style="color: red;">${ error.getFieldError("password").getDefaultMessage() }</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Profile Pic:</label>
+				</td>
+				<td>
+					<input type="file" name="pic" />
+					<p style="color: red;">${ error.getFieldError("file").getDefaultMessage() }</p>
 				</td>
 			</tr>
 			<tr>

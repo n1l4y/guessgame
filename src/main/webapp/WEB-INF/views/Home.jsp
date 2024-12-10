@@ -9,6 +9,7 @@
 </head>
 <body>
 	<h1>Welcome ${user.getName()}</h1>
+	<img src="${user.profilePath} " />
 	<c:if test="${tx != null}">
 		<c:choose>
 			<c:when test="${tx.getResult() == 'WIN'}">

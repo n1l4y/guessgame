@@ -29,6 +29,15 @@ public class UserEntity {
 	@Column(unique=true)
 	private String email;
 	
+	
+	public String getProfilePath() {
+		return profilePath;
+	}
+	public void setProfilePath(String profilePath) {
+		this.profilePath = profilePath;
+	}
+	private String profilePath;
+	
 	@Pattern(
 	        regexp = "^(?=.*[A-Z]).{8,}$",
 	        message = "Password must be at least 8 characters long and contain at least one uppercase letter"

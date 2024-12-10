@@ -14,24 +14,43 @@
 </style>
 </head>
 <body>
-	<table border="1">
-		
-		<c:forEach var="user" items="${users }">
-		
-			<tr>
-				<td>${user}</td>
-			</tr>
+	<div id="content-to-pdf" >
+		<table border="1">
 			
-		</c:forEach>
-		
-		</table>
-		<div>
-	  <canvas id="myChart"></canvas>
-	</div>
+			<c:forEach var="user" items="${users }">
+			
+				<tr>
+					<td>${user}</td>
+				</tr>
+				
+			</c:forEach>
+			
+			</table>
+			<div>
+		  <canvas id="myChart"></canvas>
+		</div>
+		</div>
+	<br />
 	
+	<button id="download-pdf">Download as PDF</button>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	
 	<script>
+	
+	document.getElementById('download-pdf').addEventListener('click', () => {
+        const element = document.getElementById('content-to-pdf');
+        const options = {
+            margin: 1,
+            filename: 'output.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(options).from(element).save();
+    });
+	
 const labels = [
 	<c:forEach var="entry" items="${winRates}">
 		"${entry[0]}",
